@@ -7,15 +7,11 @@ import Modelo.Genero;
 import Modelo.Libro;
 import Modelo.Usuario;
 import Vista.InterfazBiblioteca;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 // EXCEPCIONES
 import java.util.InputMismatchException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 
 // UTILIDADES
 import javax.swing.SwingUtilities;
@@ -37,8 +33,7 @@ public class ControladorBiblioteca {
     public String getUsuario(){
         return this.user.nombre;
     }
-    
-    
+ 
             
     // MÉTODOS -> Validaciones
     // Estas validaciones determinan si se ha cancelado una operacion:
@@ -61,9 +56,7 @@ public class ControladorBiblioteca {
         }
     }
 
-
-    
-    
+  // NOTA: Añadir la sentencia throws y chequear que todas las llamadas a estos métodos atrapen las excepciones.
     
     
     // MÉTODOS -> Operaciones
@@ -97,17 +90,14 @@ public class ControladorBiblioteca {
         try {
             esValido(username);
             if (username != null) {
-                // Buscar si ya existe un usuario con el mismo nombre.
+                
                 Optional<Usuario> usuarioExistente = this.biblioteca.usuarios.stream()
                         .filter((Usuario u) -> u.nombre.equals(username))
                         .findFirst();
-
-                // Verificar si se ha encontrado un usuario existente:
+                
                 if (usuarioExistente.isPresent()) {
-                    // De hacerlo, tan solo actualizar this.user:
                     this.user = usuarioExistente.get();
                 } else {
-                    // SI no, crear uno nuevo y agregarlo a la lista:
                     Usuario nuevoUsuario = new Usuario(username);
                     this.biblioteca.agregarUsuario(nuevoUsuario);
                     this.user = nuevoUsuario;
@@ -153,9 +143,8 @@ public class ControladorBiblioteca {
             this.biblioteca.prestarLibro(libro);
             this.user.alquilarLibro(libro);
             return true;
-        } else {
-            return false;
-        }
+        } 
+        return false;
     }
 
     public boolean devolver(Libro libro) {
@@ -168,9 +157,8 @@ public class ControladorBiblioteca {
             this.user.devolverLibro(libro);
            libro.agregarEjemplar();
             return true;
-        } else {
-            return false;
-        }
+        } 
+        return false;
     }
 
     public Libro[] buscar(String titulo, String autor, Genero genero) {

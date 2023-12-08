@@ -1,21 +1,26 @@
 
 package Vista;
 
+// DATOS
 import Controlador.ControladorBiblioteca;
 import Modelo.Genero;
 import Modelo.Libro;
+
+// EXCEPCIONES
 import java.util.InputMismatchException;
-import java.util.Set;
+
+// UTILIDADES
 import javax.swing.JOptionPane;
 
+
+
 public class InterfazBiblioteca {
-    private ControladorBiblioteca controlador;
+    private final ControladorBiblioteca controlador;
 
     // CONSTRUCTOR
     public InterfazBiblioteca(ControladorBiblioteca controlador) {
         this.controlador = controlador;
         userFrame();
-        
     }
     
     
@@ -42,18 +47,19 @@ public class InterfazBiblioteca {
         Integer opcionSeleccionada = JOptionPane.showOptionDialog(null, 
                 "¡Bienvenido/a a la biblioteca, " + this.controlador.getUsuario() + "!\nEscoge una opción: ",
                 "Biblioteca", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
-                null, opciones, opciones[4]);
+                null, opciones, opciones[0]);
         
         String mensaje;
         
         /* Al hacer a la opción Integer se puede determinar si el usuario ha apretado la x (= null)
-        y por tanto permitirle salir.*/
+        y por tanto permitirle salir, cosa que con datos primitivos no es posible..*/
         if (opcionSeleccionada == null){
             return;
         }
         
         switch (opcionSeleccionada){
             case 0:
+                // MIRAR BIBLIOTECA
                 Libro[] listado = this.controlador.librosBiblioteca();
                 Libro libro = listFrame(listado, "Seleccione el libro a inspeccionar: ");
                 if (libro != null){
@@ -64,7 +70,8 @@ public class InterfazBiblioteca {
                 return; 
                 
              case 1:
-                 Libro[] coincidencias = searchFrame();
+                 // BUSCAR LIBRO
+                Libro[] coincidencias = searchFrame();
                 if (coincidencias != null){
                     listFrame(coincidencias, "Coincidencias encontradas:");
                     cancelFrame();
@@ -73,36 +80,37 @@ public class InterfazBiblioteca {
                 return;  
                 
             case 2:
+                // ALQUILAR LIBRO
                 Libro[] alquiler = this.controlador.librosDisponiblesAlquiler();
                 if (this.controlador.alquiler(listFrame(alquiler, "Seleccione el libro a alquilar: "))) {
                     JOptionPane.showMessageDialog(null, "¡Se ha alquilado el libro!");
                     menuFrame();
                     break;
-                } else {
-                    return;
                 }
+                return;
                 
             case 3: 
+                // DEVOLVER LIBRO
                 Libro[] devolver = this.controlador.librosDisponiblesDevolver();
                 if (this.controlador.devolver(listFrame(devolver, "Seleccione el libro a devolver: "))) {
                     JOptionPane.showMessageDialog(null, "¡Se ha devuelto el libro!");
                     menuFrame();
                     break;
-                } else {
-                    return;
                 }
+                return;
                 
             case 4:
+                // CREAR LIBRO
                 mensaje = createBookFrame();
-                if (mensaje == null) {
-                    JOptionPane.showMessageDialog(null, "Se ha cancelado la operación");
-                    return;
-                } else {
+                if (mensaje != null) {
                     JOptionPane.showMessageDialog(null, mensaje);
                     menuFrame();
                     break;
                 }
+                return;
+                    
             default:
+                // SALIR 
                 userFrame();
         }
     }
@@ -156,7 +164,8 @@ public class InterfazBiblioteca {
         } catch (InputMismatchException | NumberFormatException e) {
             
             // verificarDato -> Arroja InputMismatchException si el campo está vacío.
-            // NumberFormatException -> Se arroja si el campo int recibe un valor inválido.
+            // NumberFormatException -> Se arroja si el campo integer recibe un valor inválido.
+            
             String mensaje = (e instanceof NumberFormatException) ? "Debe ingresar un número." : e.getMessage();
             JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
             return createBookFrame();

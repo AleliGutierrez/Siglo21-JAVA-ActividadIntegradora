@@ -1,5 +1,6 @@
 package Modelo;
 
+// DATOS
 import java.util.Objects;
 
 public class Libro {
@@ -30,8 +31,7 @@ public class Libro {
     }
     
     public void actualizarEjemplares(int ejemplares){
-        // El += no anda, es un mañoso.
-        this.cantEjemplares = this.cantEjemplares + ejemplares;
+        this.cantEjemplares += ejemplares;
     }
     
     

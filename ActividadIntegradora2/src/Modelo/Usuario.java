@@ -1,7 +1,6 @@
 package Modelo;
 
-
-import Modelo.Libro;
+// DATOS
 import java.util.LinkedList;
 import java.util.Objects;
 
